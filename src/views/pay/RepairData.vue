@@ -11,16 +11,16 @@
     <!-- 搜索筛选 -->
     <el-form :inline="true" :model="formInline" class="user-search">
       <el-form-item label="唯一消息">
-        <el-input size="small" v-model="formInline.machineNo" placeholder="输入消息id"></el-input>
+        <el-input  class="input" size="small" v-model="formInline.machineNo" placeholder="输入消息id"></el-input>
       </el-form-item>
-      <el-form-item label="原系统id">
-        <el-input size="small" v-model="formInline.machineNo" placeholder="原系统id"></el-input>
+      <el-form-item label="发起系统">
+        <el-input  class="input" size="small" v-model="formInline.machineNo" placeholder="原系统id"></el-input>
       </el-form-item>
-      <el-form-item label="目标系统id">
-        <el-input size="small" v-model="formInline.machineNo" placeholder="目标系统id"></el-input>
+      <el-form-item label="目标系统">
+        <el-input  class="input" size="small" v-model="formInline.machineNo" placeholder="目标系统id"></el-input>
       </el-form-item>
       <el-form-item label="补偿类型">
-        <el-select size="small" v-model="formInline.roleId" placeholder="补偿类型">
+        <el-select class="input" size="small" v-model="formInline.roleId" placeholder="补偿类型">
           <el-option selected label="请选择" value="0"></el-option>
           <el-option v-for="parm in rapairList" :key="parm.code" :label="parm.desc" :value="parm.code"></el-option>
         </el-select>
@@ -663,6 +663,10 @@ export default {
 }
 .userRole {
   width: 100%;
+}
+.input {
+  width: 220px;
+  height: 41px;
 }
 </style>
 

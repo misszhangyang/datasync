@@ -10,14 +10,14 @@
     </el-breadcrumb>
     <!-- 搜索筛选 -->
     <el-form :inline="true" :model="formInline" class="user-search">
-      <el-form-item label="搜索：">
-        <el-input size="small" v-model="formInline.machineNo" placeholder="输入消息id"></el-input>
+      <el-form-item label="唯一消息">
+        <el-input class="input" size="small" v-model="formInline.machineNo" placeholder="消息id"></el-input>
       </el-form-item>
-      <el-form-item label="原系统id">
-        <el-input size="small" v-model="formInline.machineNo" placeholder="原系统id"></el-input>
+      <el-form-item label="发起系统">
+        <el-input class="input" size="small" v-model="formInline.machineNo" placeholder="原系统id"></el-input>
       </el-form-item>
       <el-form-item label="目标系统id">
-        <el-input size="small" v-model="formInline.machineNo" placeholder="目标系统id"></el-input>
+        <el-input class="input" size="small" v-model="formInline.machineNo" placeholder="目标系统id"></el-input>
       </el-form-item>
       <el-form-item  label="开始时间">
           <el-date-picker size="small" v-model="startTime" type="datetime" format="yyyy-MM-ddHH:mm:ss" value-format="yyyy-MM-ddHH:mm:ss" placeholder="开始时间">
@@ -653,6 +653,10 @@ export default {
 }
 .userRole {
   width: 100%;
+}
+.input {
+  width: 220px;
+  height: 41px;
 }
 </style>
 

@@ -10,7 +10,7 @@
       <el-breadcrumb-item>数据可视化</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 搜索，切换 -->
-    <el-row :gutter="23">
+    <!-- <el-row :gutter="23">
       <el-col :span="18">
         <div class="stbgc">
           <el-row :gutter="23">
@@ -28,8 +28,8 @@
             </el-col>
           </el-row>
         </div>
-      </el-col>
-      <el-col :span="6">
+      </el-col> -->
+      <!-- <el-col :span="6">
         <div class="stbgc">
           <el-row>
             <el-col :span="8" class="text-c">
@@ -44,7 +44,7 @@
           </el-row>
         </div>
       </el-col>
-    </el-row>
+    </el-row> -->
     <!-- 统计图 -->
     <el-row :gutter="23">
       <el-col :span="8" class="text-c">
