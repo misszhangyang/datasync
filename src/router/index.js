@@ -38,10 +38,12 @@ import Dept from '@/views/system/Dept';
 import Variable from '@/views/system/Variable';
 // 权限管理
 import Permission from '@/views/system/Permission';
+// 配置管理
+import DatasyncConfig from '@/views/machine/DatasyncConfig';
 /**
  * 支付管理
  */
-// 支付配置信息
+// 支付配置信息npm
 import MachineConfig from '@/views/machine/MachineConfig';
 // 支付配置
 import Config from '@/views/pay/Config';
@@ -171,7 +173,15 @@ export default new Router({
             meta: {
                 requireAuth: true
             }
-        }, {
+        }, , {
+            path: '/machine/DatasyncConfig',
+            name: '同步信息管理',
+            component: DatasyncConfig,
+            meta: {
+                requireAuth: true
+            }
+        },
+        {
             path: '/pay/Config',
             name: '支付配置',
             component: Config,

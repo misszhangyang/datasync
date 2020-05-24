@@ -117,22 +117,22 @@ export default {
               url: 'system/Role',
               menus: null
             },
-            {
-              menuid: 74,
-              icon: 'icon-cs-manage',
-              menuname: '公司管理',
-              hasThird: 'N',
-              url: 'system/Dept',
-              menus: null
-            },
-            {
-              menuid: 75,
-              icon: 'icon-promotion-manage',
-              menuname: '系统环境变量',
-              hasThird: 'N',
-              url: 'system/Variable',
-              menus: null
-            },
+            // {
+            //   menuid: 74,
+            //   icon: 'icon-cs-manage',
+            //   menuname: '公司管理',
+            //   hasThird: 'N',
+            //   url: 'system/Dept',
+            //   menus: null
+            // },
+            // {
+            //   menuid: 75,
+            //   icon: 'icon-promotion-manage',
+            //   menuname: '系统环境变量',
+            //   hasThird: 'N',
+            //   url: 'system/Variable',
+            //   menus: null
+            // },
             {
               menuid: 76,
               icon: 'icon-cms-manage',
@@ -146,7 +146,7 @@ export default {
         {
           menuid: 128,
           icon: 'li-icon-shangchengxitongtubiaozitihuayuanwenjian91',
-          menuname: '跑批管理',
+          menuname: '配置管理',
           hasThird: null,
           url: null,
           menus: [
@@ -156,6 +156,14 @@ export default {
               menuname: '跑批信息配置',
               hasThird: 'N',
               url: 'machine/MachineConfig',
+              menus: null
+            },
+            {
+              menuid: 132,
+              icon: 'icon-provider-manage',
+              menuname: '同步信息配置',
+              hasThird: 'N',
+              url: 'machine/DatasyncConfig',
               menus: null
             },
             // {
