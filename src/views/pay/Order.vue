@@ -11,13 +11,19 @@
     <!-- 搜索筛选 -->
     <el-form :inline="true" :model="formInline" class="user-search">
       <el-form-item label="唯一消息">
-        <el-input  class="input" size="small" v-model="formInline.machineNo" placeholder="消息id"></el-input>
+        <el-input class="input" size="small" v-model="formInline.machineNo" placeholder="输入消息id"></el-input>
       </el-form-item>
       <el-form-item label="发起系统">
-        <el-input  class="input" size="small" v-model="formInline.machineNo" placeholder="原系统id"></el-input>
+        <el-input class="input" size="small" v-model="formInline.machineNo" placeholder="原系统id"></el-input>
       </el-form-item>
-      <el-form-item label="目标系统id">
-        <el-input  class="input" size="small" v-model="formInline.machineNo" placeholder="目标系统id"></el-input>
+      <el-form-item label="目标系统">
+        <el-input class="input" size="small" v-model="formInline.machineNo" placeholder="目标系统id"></el-input>
+      </el-form-item>
+      <el-form-item label="消息来源">
+        <el-select class="input" size="small" v-model="formInline.roleId" placeholder="消息来源">
+          <el-option selected label="请选择" value="0"></el-option>
+          <el-option v-for="parm in rapairList" :key="parm.code" :label="parm.desc" :value="parm.code"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item  label="开始时间">
           <el-date-picker size="small" v-model="startTime" type="datetime" format="yyyy-MM-ddHH:mm:ss" value-format="yyyy-MM-ddHH:mm:ss" placeholder="开始时间">
@@ -215,6 +221,12 @@ export default {
         pageSize: 10,
         total: 10
       },
+      rapairList: [
+        {code: '0', desc: '交易流水'},
+        {code: '1', desc: '商户信息'},
+        {code: '2', desc: '机构信息'},
+        {code: '3', desc: '风控流水'}
+      ],
       startTime: null,
       endTime: null,
       startDatePicker: this.beginDate(),
