@@ -18,11 +18,13 @@ import MachineAisle from '@/views/machine/MachineAisle';
  * 订单管理
  */
 // 交易订单
-import Order from '@/views/pay/Order';
+import Promq from '@/views/push/Promq';
 //MQ消费管理
-import Consumq from '@/views/pay/Consumq';
+import Consumq from '@/views/push/Consumq';
 //数据补偿管理
-import RepairData from '@/views/pay/RepairData';
+import RepairData from '@/views/push/RepairData';
+//数据文件补偿管理
+import RepairFile from '@/views/push/RepairFile';
 /**
  * 系统管理
  */
@@ -45,8 +47,6 @@ import DatasyncConfig from '@/views/machine/DatasyncConfig';
  */
 // 支付配置信息npm
 import MachineConfig from '@/views/machine/MachineConfig';
-// 支付配置
-import Config from '@/views/pay/Config';
 /**
  * 数据监控
  */
@@ -104,27 +104,35 @@ export default new Router({
                 requireAuth: true
             }
         }, {
-            path: '/pay/Order',
-            name: '交易订单',
-            component: Order,
+            path: '/push/Promq',
+            name: '推送MQ',
+            component: Promq,
             meta: {
                 requireAuth: true
             }
         }, {
-            path: '/pay/Consumq',
+            path: '/push/Consumq',
             name: 'MQ消费',
             component: Consumq,
             meta: {
                 requireAuth: true
             }
         }, {
-            path: '/pay/RepairData',
-            name: '数据补偿',
+            path: '/push/RepairData',
+            name: '接口补偿',
             component: RepairData,
             meta: {
                 requireAuth: true
             }
         }, {
+            path: '/push/RepairFile',
+            name: '文件补偿',
+            component: RepairFile,
+            meta: {
+                requireAuth: true
+            }
+        }, 
+        {
             path: '/system/user',
             name: '用户管理',
             component: user,
@@ -182,13 +190,6 @@ export default new Router({
             }
         },
         {
-            path: '/pay/Config',
-            name: '支付配置',
-            component: Config,
-            meta: {
-                requireAuth: true
-            }
-        }, {
             path: '/druid/login',
             name: '监控查询',
             component: druidLogin,

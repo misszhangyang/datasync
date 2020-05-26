@@ -62,8 +62,8 @@
           <el-button size="mini" type="danger" @click="deleteUser(scope.$index, scope.row)">删除</el-button>
           <el-button size="mini" type="success" @click="resetpwd(scope.$index, scope.row)">重置密码</el-button>
           <el-button size="mini" type="success" @click="dataAccess(scope.$index, scope.row)">数据权限</el-button>
-          <el-button size="mini" type="success" @click="offlineUser(scope.$index, scope.row)">下线</el-button>
-          <el-button size="mini" type="success" @click="refreshCache(scope.$index, scope.row)">刷新缓存</el-button>
+          <!-- <el-button size="mini" type="success" @click="offlineUser(scope.$index, scope.row)">下线</el-button> -->
+          <!-- <el-button size="mini" type="success" @click="refreshCache(scope.$index, scope.row)">刷新缓存</el-button> -->
         </template>
       </el-table-column>
     </el-table>

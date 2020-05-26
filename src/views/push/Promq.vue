@@ -6,7 +6,7 @@
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>数据补偿失败查询</el-breadcrumb-item>
+      <el-breadcrumb-item>推送MQ</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 搜索筛选 -->
     <el-form :inline="true" :model="formInline" class="user-search">
@@ -19,17 +19,17 @@
       <el-form-item label="目标系统">
         <el-input class="input" size="small" v-model="formInline.machineNo" placeholder="目标系统id"></el-input>
       </el-form-item>
-      <el-form-item label="补偿类型">
-        <el-select class="input" size="small" v-model="formInline.roleId" placeholder="补偿类型">
+      <el-form-item label="消息来源">
+        <el-select class="input" size="small" v-model="formInline.roleId" placeholder="消息来源">
           <el-option selected label="请选择" value="0"></el-option>
           <el-option v-for="parm in rapairList" :key="parm.code" :label="parm.desc" :value="parm.code"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="开始时间">
+      <el-form-item  label="开始时间">
           <el-date-picker size="small" v-model="startTime" type="datetime" format="yyyy-MM-ddHH:mm:ss" value-format="yyyy-MM-ddHH:mm:ss" placeholder="开始时间">
           </el-date-picker>   
       </el-form-item>
-      <el-form-item label="结束时间" >
+      <el-form-item  label="结束时间">
           <el-date-picker size="small" v-model="endTime" type="datetime" format="yyyy-MM-ddHH:mm:ss" value-format="yyyy-MM-ddHH:mm:ss" placeholder="结束时间">
           </el-date-picker>   
       </el-form-item>
@@ -213,10 +213,6 @@ export default {
         ids: '',
         token: localStorage.getItem('logintoken')
       },
-      rapairList: [
-        {code: '0', desc: '文件补偿'},
-        {code: '1', desc: '接口补偿'}
-      ],
       userparm: [], //搜索权限
       listData: [], //用户数据
       // 分页参数
@@ -225,6 +221,12 @@ export default {
         pageSize: 10,
         total: 10
       },
+      rapairList: [
+        {code: '0', desc: '交易流水'},
+        {code: '1', desc: '商户信息'},
+        {code: '2', desc: '机构信息'},
+        {code: '3', desc: '风控流水'}
+      ],
       startTime: null,
       endTime: null,
       startDatePicker: this.beginDate(),
@@ -333,181 +335,6 @@ export default {
             mchId: '898310154990338',
             subMchId: null,
             remark: '无法找到指定的账单'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1521307596000,
-            editTime: 1524641207000,
-            orderId: 20,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '9300079120180318142634440',
-            transId: null,
-            payType: 0,
-            subPayType: '0',
-            transType: '消费',
-            machineNo: '111111111111111',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 7,
-            openId: null,
-            mchId: null,
-            subMchId: null,
-            remark: '1111111111111111111111'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520195909000,
-            editTime: 1520195909000,
-            orderId: 19,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '9300079120180305183828606',
-            transId: null,
-            payType: 0,
-            subPayType: '0',
-            transType: '消费',
-            machineNo: '93000791',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 1,
-            openId: null,
-            mchId: null,
-            subMchId: null,
-            remark: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520035180000,
-            editTime: 1520035180000,
-            orderId: 18,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '4200000056201803031934477774',
-            transId: '9300079120180303170851281',
-            payType: 6,
-            subPayType: 'WXPay',
-            transType: '退款',
-            machineNo: '222222222222222222',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 8,
-            openId: null,
-            mchId: '898310154990338',
-            subMchId: null,
-            remark: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520020261000,
-            editTime: 1520185478000,
-            orderId: 17,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '9300079120180303175059985',
-            transId: '4200000072201803031887274444',
-            payType: 6,
-            subPayType: 'WXPay',
-            transType: '消费',
-            machineNo: '93000791',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 7,
-            openId: null,
-            mchId: '898310154990338',
-            subMchId: null,
-            remark: '不允许从此IP发起交易: 116.247.119.165'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520019911000,
-            editTime: 1520020075000,
-            orderId: 16,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '9300079120180303174511778',
-            transId: '4200000055201803031949877221',
-            payType: 6,
-            subPayType: 'WXPay',
-            transType: '消费',
-            machineNo: '93000791',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 1,
-            openId: null,
-            mchId: '898310154990338',
-            subMchId: null,
-            remark: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520019776000,
-            editTime: 1520019776000,
-            orderId: 15,
-            deptId: 1,
-            deptName: 'xxxx',
-            orderNo: '9300079120180303174256156',
-            transId: null,
-            payType: 0,
-            subPayType: '0',
-            transType: '消费',
-            machineNo: '93000791',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 1,
-            openId: null,
-            mchId: null,
-            subMchId: null,
-            remark: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520019729000,
-            editTime: 1520019729000,
-            orderId: 14,
-            deptId: 1,
-            deptName: '上海XX',
-            orderNo: '9300079120180303174208429',
-            transId: null,
-            payType: 0,
-            subPayType: '0',
-            transType: '消费',
-            machineNo: '93000791',
-            goodsNo: '123456',
-            goodsPrice: 0.01,
-            payAmount: 0.01,
-            goodsName: '可乐',
-            aisleNo: null,
-            orderStatus: 1,
-            openId: null,
-            mchId: null,
-            subMchId: null,
-            remark: null
           }
         ]
       }

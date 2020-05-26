@@ -11,8 +11,6 @@ import router from './router';
 import store from './vuex/store';
 // 引入icon
 import './assets/icon/iconfont.css'
-// 
-
 // 引入echarts
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts

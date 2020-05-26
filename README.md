@@ -1,7 +1,8 @@
 # vue搭建后台管理界面模版（PC端）
 ------------------------
 推荐学习链接
-https://github.com/kon9chunkit/GitHub-Chinese-Top-Charts
+
+
 
 <img src="./static/gif.gif" width="100%" height="519px"/>  
 

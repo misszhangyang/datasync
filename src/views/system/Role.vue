@@ -11,10 +11,10 @@
     <!-- 搜索筛选 -->
     <el-form :inline="true" :model="formInline" class="user-search">
 
-      <el-form-item label="搜索：">
+      <el-form-item>
         <el-input size="small" v-model="formInline.roleName" placeholder="输入角色名称"></el-input>
       </el-form-item>
-      <el-form-item label="">
+      <el-form-item>
         <el-input size="small" v-model="formInline.roleNo" placeholder="输入角色代码"></el-input>
       </el-form-item>
       <el-form-item>

@@ -65,7 +65,7 @@ export default {
               icon: 'icon-order-manage',
               menuname: '发送MQ',
               hasThird: 'N',
-              url: 'pay/Order',
+              url: 'push/Promq',
               menus: null
             },
              {
@@ -73,17 +73,58 @@ export default {
               icon: 'icon-order-manage',
               menuname: 'MQ消费',
               hasThird: 'N',
-              url: 'pay/Consumq',
+              url: 'push/Consumq',
               menus: null
             },
              {
               menuid: 36,
               icon: 'icon-order-manage',
-              menuname: '数据补偿',
+              menuname: '接口补偿',
               hasThird: 'N',
-              url: 'pay/RepairData',
+              url: 'push/RepairData',
+              menus: null
+            },
+             {
+              menuid: 38,
+              icon: 'icon-order-manage',
+              menuname: '文件补偿',
+              hasThird: 'N',
+              url: 'push/RepairFile',
               menus: null
             }
+          ]
+        },
+         {
+          menuid: 128,
+          icon: 'li-icon-shangchengxitongtubiaozitihuayuanwenjian91',
+          menuname: '配置管理',
+          hasThird: null,
+          url: null,
+          menus: [
+            {
+              menuid: 129,
+              icon: 'icon-provider-manage',
+              menuname: '跑批信息配置',
+              hasThird: 'N',
+              url: 'machine/MachineConfig',
+              menus: null
+            },
+            {
+              menuid: 132,
+              icon: 'icon-provider-manage',
+              menuname: '同步信息配置',
+              hasThird: 'N',
+              url: 'machine/DatasyncConfig',
+              menus: null
+            },
+            // {
+            //   menuid: 175,
+            //   icon: 'icon-provider-manage',
+            //   menuname: '支付配置',
+            //   hasThird: 'N',
+            //   url: 'pay/Config',
+            //   menus: null
+            // }
           ]
         },
         {
@@ -142,40 +183,7 @@ export default {
               menus: null
             }
           ]
-        },
-        {
-          menuid: 128,
-          icon: 'li-icon-shangchengxitongtubiaozitihuayuanwenjian91',
-          menuname: '配置管理',
-          hasThird: null,
-          url: null,
-          menus: [
-            {
-              menuid: 129,
-              icon: 'icon-provider-manage',
-              menuname: '跑批信息配置',
-              hasThird: 'N',
-              url: 'machine/MachineConfig',
-              menus: null
-            },
-            {
-              menuid: 132,
-              icon: 'icon-provider-manage',
-              menuname: '同步信息配置',
-              hasThird: 'N',
-              url: 'machine/DatasyncConfig',
-              menus: null
-            },
-            // {
-            //   menuid: 175,
-            //   icon: 'icon-provider-manage',
-            //   menuname: '支付配置',
-            //   hasThird: 'N',
-            //   url: 'pay/Config',
-            //   menus: null
-            // }
-          ]
-        },
+        }
         // {
         //   menuid: 150,
         //   icon: 'li-icon-shangchengxitongtubiaozitihuayuanwenjian91',

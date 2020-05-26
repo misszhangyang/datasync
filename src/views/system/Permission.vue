@@ -10,10 +10,10 @@
     </el-breadcrumb>
     <!-- 搜索筛选 -->
     <el-form :inline="true" :model="formInline" class="user-search">
-      <el-form-item label="搜索：">
+      <el-form-item>
         <el-input size="small" v-model="formInline.permissionName" placeholder="输入权限名称"></el-input>
       </el-form-item>
-      <el-form-item label="">
+      <el-form-item>
         <el-input size="small" v-model="formInline.permission" placeholder="输入权限CODE"></el-input>
       </el-form-item>
       <el-form-item label="角色：">
@@ -112,7 +112,10 @@ export default {
       },
       // 选择数据
       selectdata: [],
-      userparm: [], //搜索权限
+      userparm: [
+        {roleId:'1',roleName:'超级管理员'},
+        {roleId:'2',roleName:'管理员'}
+      ], //搜索权限
       listData: [], //用户数据
       // 分页参数
       pageparm: {

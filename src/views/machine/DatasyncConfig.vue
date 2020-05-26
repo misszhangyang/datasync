@@ -11,7 +11,7 @@
     <!-- 搜索筛选 -->
     <el-form :inline="true" :model="formInline" class="user-search">
       <el-form-item>
-        <el-input size="small" v-model="formInline.machineNo" placeholder="输入终端号"></el-input>
+        <el-input size="small" v-model="formInline.machineNo" placeholder="输入系统编号"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button size="small" type="primary" icon="el-icon-search" @click="search">搜索</el-button>
@@ -22,17 +22,19 @@
     <el-table size="small" :data="listData" highlight-current-row v-loading="loading" border element-loading-text="拼命加载中" style="width: 100%;">
       <el-table-column align="center" type="selection" width="60">
       </el-table-column>
-      <el-table-column sortable prop="machineNo" label="终端号" width="200">
+      <el-table-column sortable prop="sysCode" label="系统编号" width="200">
       </el-table-column>
-      <el-table-column sortable prop="payType" label="支付方式" width="200">
+      <el-table-column sortable prop="sysName" label="系统名称" width="200">
       </el-table-column>
-      <el-table-column sortable prop="configName" label="显示名称" width="200">
+      <el-table-column sortable prop="sysQueue" label="指定队列" width="200">
       </el-table-column>
-      <el-table-column sortable prop="payOpen" label="状态" width="200">
+      <el-table-column sortable prop="sysRoutekey" label="路由key" width="200">
       </el-table-column>
-      <el-table-column sortable prop="editTime" label="修改时间" width="200">
+      <el-table-column sortable prop="sysApi" label="接口地址" width="200">
+      </el-table-column>
+      <el-table-column sortable prop="sysTime" label="修改时间" width="200">
         <template slot-scope="scope">
-          <div>{{scope.row.editTime|timestampToTime}}</div>
+          <div>{{scope.row.sysTime|timestampToTime}}</div>
           </el-switch>
         </template>
       </el-table-column>
@@ -50,26 +52,32 @@
     <!-- 编辑界面 -->
     <el-dialog :title="title" :visible.sync="editFormVisible" width="30%" @click="closeDialog">
       <el-form label-width="120px" :model="editForm" :rules="rules" ref="editForm">
-        <el-form-item label="终端号" prop="machineNo">
-          <el-input size="small" v-model="editForm.machineNo" auto-complete="off" placeholder="请输入终端号"></el-input>
+        <el-form-item label="系统编号" prop="sysCode">
+          <el-input size="small" v-model="editForm.sysCode" auto-complete="off" placeholder="请输入系统编号"></el-input>
         </el-form-item>
-        <el-form-item label="支付方式" prop="payType">
-          <el-select size="small" v-model="editForm.payType" placeholder="请选择" class="userRole">
+        <el-form-item label="系统名称" prop="sysName">
+          <el-select size="small" v-model="editForm.sysName" placeholder="请输入系统名称" class="userRole">
             <el-option v-for="type in payType" :label="type.key" :value="type.value" :key="type.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="配置序号" prop="configId">
-          <el-input size="small" v-model="editForm.configId" auto-complete="off" placeholder="请输入配置序号"></el-input>
+        <el-form-item label="指定队列" prop="sysQueue">
+          <el-input size="small" v-model="editForm.sysQueue" auto-complete="off" placeholder="请输入指定队列"></el-input>
         </el-form-item>
-        <el-form-item label="显示名称" prop="configName">
+        <el-form-item label="路由key" prop="sysRoutekey">
+          <el-input size="small" v-model="editForm.sysRoutekey" auto-complete="off" placeholder="请输入路由key"></el-input>
+        </el-form-item>
+        <el-form-item label="接口地址" prop="sysApi">
+          <el-input size="small" v-model="editForm.sysApi" auto-complete="off" placeholder="请输入接口地址"></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="路由key" prop="sysRoutkey">
           <el-input size="small" v-model="editForm.configName" auto-complete="off" placeholder="请输入显示名称"></el-input>
-        </el-form-item>
-        <el-form-item label="状态" prop="payOpen">
+        </el-form-item> -->
+        <!-- <el-form-item label="状态" prop="payOpen">
           <el-select size="small" v-model="editForm.payOpen" placeholder="请选择" class="userRole">
             <el-option label="正常" value="T"></el-option>
             <el-option label="禁用" value="N"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="closeDialog">取消</el-button>
@@ -105,26 +113,28 @@ export default {
         { key: '会员余额支付', value: 9 }
       ],
       editForm: {
-        tcId: '',
-        machineNo: '',
-        payType: '',
-        configId: '',
-        configName: '',
-        payOpen: '',
+        sysCode: '',
+        sysName: '',
+        sysQueue: '',
+        sysRoutekey: '',
+        sysApi: '',
         token: localStorage.getItem('logintoken')
       },
       // rules表单验证
       rules: {
-        machineNo: [
+        sysCode: [
           { required: true, message: '请输入终端号', trigger: 'blur' }
         ],
-        payType: [
+        sysName: [
           { required: true, message: '请选择支付方式', trigger: 'blur' }
         ],
-        configId: [
+        sysQueue: [
           { required: true, message: '请输入配置序号', trigger: 'blur' }
         ],
-        configName: [
+        sysRoutekey: [
+          { required: true, message: '请输入显示名称', trigger: 'blur' }
+        ],
+        sysApi: [
           { required: true, message: '请输入显示名称', trigger: 'blur' }
         ],
         payOpen: [{ required: true, message: '请选择状态', trigger: 'blur' }]
@@ -183,71 +193,71 @@ export default {
             addUser: null,
             editUser: null,
             addTime: null,
-            editTime: 1524046759000,
+            sysTime: 1524046759000,
             tcId: 1,
             deptId: 1,
-            machineNo: '564565656666',
-            payType: 3,
-            payOpen: 'T',
-            configId: 63,
-            configName: '微信',
+            sysCode: '564565656666',
+            sysRoutekey: 3,
+            sysName: 'T',
+            sysApi: 63,
+            sysQueue: '微信',
+            posNo: '098'
+          },
+         {
+            addUser: null,
+            editUser: null,
+            addTime: null,
+            sysTime: 1524046759000,
+            tcId: 1,
+            deptId: 1,
+            sysCode: '564565656666',
+            sysRoutekey: 3,
+            sysName: 'T',
+            sysApi: 63,
+            sysQueue: '微信',
+            posNo: '098'
+          },
+         {
+            addUser: null,
+            editUser: null,
+            addTime: null,
+            sysTime: 1524046759000,
+            tcId: 1,
+            deptId: 1,
+            sysCode: '564565656666',
+            sysRoutekey: 3,
+            sysName: 'T',
+            sysApi: 63,
+            sysQueue: '微信',
             posNo: '098'
           },
           {
             addUser: null,
             editUser: null,
             addTime: null,
-            editTime: null,
-            tcId: 2,
+            sysTime: 1524046759000,
+            tcId: 1,
             deptId: 1,
-            machineNo: '66666666',
-            payType: 2,
-            payOpen: 'T',
-            configId: 64,
-            configName: '支付宝',
-            posNo: null
+            sysCode: '564565656666',
+            sysRoutekey: 3,
+            sysName: 'T',
+            sysApi: 63,
+            sysQueue: '微信',
+            posNo: '098'
           },
-          {
+         {
             addUser: null,
             editUser: null,
             addTime: null,
-            editTime: null,
-            tcId: 3,
+            sysTime: 1524046759000,
+            tcId: 1,
             deptId: 1,
-            machineNo: '93066545645546500791',
-            payType: 6,
-            payOpen: 'T',
-            configId: 67,
-            configName: '银商微信、支付宝',
-            posNo: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: null,
-            editTime: null,
-            tcId: 4,
-            deptId: 1,
-            machineNo: '65545656565',
-            payType: 6,
-            payOpen: 'T',
-            configId: 67,
-            configName: '银商微信、支付宝',
-            posNo: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1527409037000,
-            editTime: 1527409037000,
-            tcId: 6,
-            deptId: 1,
-            machineNo: '565654545454545',
-            payType: 6,
-            payOpen: 'T',
-            configId: 96,
-            configName: '微信',
-            posNo: null
+            sysCode: '564565656666',
+            sysRoutekey: 3,
+            sysName: 'T',
+            sysApi: 63,
+            sysQueue: '微信',
+            posNo: '098'
           }
         ]
       }
@@ -294,24 +304,32 @@ export default {
       this.getdata(this.formInline)
     },
     //显示编辑界面
+    // editForm: {
+    //     sysCode: '',
+    //     sysName: '',
+    //     sysQueue: '',
+    //     sysRoutekey: '',
+    //     sysApi: '',
+    //     token: localStorage.getItem('logintoken')
+    //   },
     handleEdit: function(index, row) {
       this.editFormVisible = true
       if (row != undefined && row != 'undefined') {
         this.title = '修改'
-        this.editForm.tcId = row.tcId
-        this.editForm.machineNo = row.machineNo
-        this.editForm.configId = row.configId
-        this.editForm.payType = row.payType
-        this.editForm.configName = row.configName
-        this.editForm.payOpen = row.payOpen
+        this.editForm.sysCode = row.sysCode
+        this.editForm.sysName = row.sysName
+        this.editForm.sysQueue = row.sysQueue
+        this.editForm.sysRoutekey = row.sysRoutekey
+        this.editForm.sysApi = row.sysApi
+        // this.editForm.payOpen = row.payOpen
       } else {
         this.title = '添加'
-        this.editForm.tcId = ''
-        this.editForm.machineNo = ''
-        this.editForm.payType = ''
-        this.editForm.configId = ''
-        this.editForm.configName = ''
-        this.editForm.payOpen = ''
+        this.editForm.sysCode = ''
+        this.editForm.sysName = ''
+        this.editForm.sysQueue = ''
+        this.editForm.sysRoutekey = ''
+        this.editForm.sysApi = ''
+        // this.editForm.payOpen = ''
       }
     },
     // 编辑、增加页面保存方法

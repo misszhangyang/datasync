@@ -10,43 +10,22 @@
       <el-breadcrumb-item>数据可视化</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 搜索，切换 -->
-    <!-- <el-row :gutter="23">
-      <el-col :span="18">
-        <div class="stbgc">
-          <el-row :gutter="23">
-            <el-col :span="7">
-              <el-input size="small" v-model="machineNo" placeholder="请输入所属公司"></el-input>
-            </el-col>
-            <el-col :span="7">
-              <el-input size="small" v-model="machineNo" placeholder="请输入资产编号"></el-input>
-            </el-col>
-            <el-col :span="7">
-              <el-input size="small" v-model="machineNo" placeholder="请输入"></el-input>
-            </el-col>
-            <el-col :span="3" class="stsearch">
-              <el-button size="small" type="primary">搜索</el-button>
-            </el-col>
-          </el-row>
+    <el-row :gutter="23" class="row">
+        <div class="top-left">
+            <el-breadcrumb-item>今日接收统计:</el-breadcrumb-item>
+            <el-breadcrumb-item>121121</el-breadcrumb-item>
         </div>
-      </el-col> -->
-      <!-- <el-col :span="6">
-        <div class="stbgc">
-          <el-row>
-            <el-col :span="8" class="text-c">
-              <el-radio v-model="type" label="day">日</el-radio>
-            </el-col>
-            <el-col :span="8" class="text-c">
-              <el-radio v-model="type" label="month">月</el-radio>
-            </el-col>
-            <el-col :span="8" class="text-c">
-              <el-radio v-model="type" label="years">年</el-radio>
-            </el-col>
-          </el-row>
+        <div class="top-center">
+            <el-breadcrumb-item>推送MQ错误：</el-breadcrumb-item>
+            <el-breadcrumb-item>121121</el-breadcrumb-item>
         </div>
-      </el-col>
-    </el-row> -->
+        <div class="top-right">
+            <el-breadcrumb-item>消费MQ错误：</el-breadcrumb-item>
+            <el-breadcrumb-item>121121</el-breadcrumb-item>
+        </div>
+    </el-row>
     <!-- 统计图 -->
-    <el-row :gutter="23">
+    <el-row :gutter="25" class="center">
       <el-col :span="8" class="text-c">
         <div class="st-gbox">
           <div class="cavasbox" ref="SCEchart"></div>
@@ -96,7 +75,7 @@ export default {
         },
         legend: {
           data: [{
-            name: '销售总笔数',
+            name: '近7日数据接收统计',
             icon: 'rect'
           }],
           top: 1,
@@ -152,7 +131,7 @@ export default {
           }
         },
         series: [{
-          name: '销售总笔数',
+          name: '近7日数据接收统计',
           type: 'bar',
           barGap: 0,
           data: [50000, 70000, 80000, 40000, 50000, 30000, 40000, 60000, 50000, 40000, 60000, 40000],
@@ -189,7 +168,7 @@ export default {
         },
         legend: {
           data: [{
-            name: '销售总金额',
+            name: '近7日推送MQ统计',
             icon: 'rect'
           }],
           top: 1,
@@ -245,7 +224,7 @@ export default {
           }
         },
         series: [{
-          name: '销售总金额',
+          name: '近7日推送MQ统计',
           //   type: 'bar',
           type: 'line',
           barGap: 0,
@@ -264,7 +243,7 @@ export default {
         },
         legend: {
           data: [{
-            name: '总点击量',
+            name: '近7日消费MQ统计',
             icon: 'rect'
           }],
           top: 1,
@@ -320,7 +299,7 @@ export default {
           }
         },
         series: [{
-          name: '总点击量',
+          name: '近7日消费MQ统计',
           type: 'bar',
           barGap: 0,
           data: [50000, 10000, 80000, 30000, 50000, 60000, 40000, 80000, 50000, 20000, 60000, 40000],
@@ -334,7 +313,7 @@ export default {
       payoption: {
         backgroundColor: '#2c343c',
         title: {
-          text: '支付方式统计(金额)',
+          text: '源系统发送占比',
           left: 10,
           top: 5,
           textStyle: {
@@ -358,7 +337,7 @@ export default {
         },
         series: [
           {
-            name: '支付方式统计(金额)',
+            name: '源系统发送占比',
             type: 'pie',
             radius: '55%',
             center: ['50%', '50%'],
@@ -406,7 +385,7 @@ export default {
       payNumoption: {
         backgroundColor: '#2c343c',
         title: {
-          text: '支付方式统计(笔数)',
+          text: '目标系统接收占比',
           left: 10,
           top: 5,
           textStyle: {
@@ -430,7 +409,7 @@ export default {
         },
         series: [
           {
-            name: '支付方式统计(笔数)',
+            name: '目标系统接收占比',
             type: 'pie',
             radius: '55%',
             center: ['50%', '50%'],
@@ -561,5 +540,26 @@ export default {
   border-radius: 5px;
   margin-top: 20px;
   height: 32vh;
+}
+.top-left {
+  margin-left: 2%;
+  font-size: 1.8rem;
+  color: aqua !important;
+}
+.top-center {
+  margin-left: 35%;
+  font-size: 1.8rem;
+  color: aqua !important;
+}
+.top-right {
+  margin-left: 68.5%;
+  font-size: 1.8rem;
+  color: aqua !important;
+}
+.row {
+  margin-top: 3%
+}
+.center {
+    margin-top: 2%
 }
 </style>

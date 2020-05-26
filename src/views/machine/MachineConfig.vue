@@ -11,7 +11,7 @@
     <!-- 搜索筛选 -->
     <el-form :inline="true" :model="formInline" class="user-search">
       <el-form-item>
-        <el-input size="small" v-model="formInline.machineNo" placeholder="输入终端号"></el-input>
+        <el-input size="small" v-model="formInline.machineNo" placeholder="输入批次号"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button size="small" type="primary" icon="el-icon-search" @click="search">搜索</el-button>
@@ -22,15 +22,17 @@
     <el-table size="small" :data="listData" highlight-current-row v-loading="loading" border element-loading-text="拼命加载中" style="width: 100%;">
       <el-table-column align="center" type="selection" width="60">
       </el-table-column>
-      <el-table-column sortable prop="machineNo" label="终端号" width="200">
+      <el-table-column sortable prop="jobId" label="批次号" width="200">
       </el-table-column>
-      <el-table-column sortable prop="payType" label="支付方式" width="200">
+      <el-table-column sortable prop="jobDesc" label="跑批描述" width="200">
       </el-table-column>
-      <el-table-column sortable prop="configName" label="显示名称" width="200">
+      <el-table-column sortable prop="jobCron" label="时间规则" width="200">
       </el-table-column>
-      <el-table-column sortable prop="payOpen" label="状态" width="200">
+      <el-table-column sortable prop="jobPath" label="类路径" width="200">
       </el-table-column>
-      <el-table-column sortable prop="editTime" label="修改时间" width="200">
+      <el-table-column sortable prop="jobStat" label="状态" width="200">
+      </el-table-column>
+      <el-table-column sortable prop="jobTime" label="修改时间" width="200">
         <template slot-scope="scope">
           <div>{{scope.row.editTime|timestampToTime}}</div>
           </el-switch>
@@ -50,22 +52,22 @@
     <!-- 编辑界面 -->
     <el-dialog :title="title" :visible.sync="editFormVisible" width="30%" @click="closeDialog">
       <el-form label-width="120px" :model="editForm" :rules="rules" ref="editForm">
-        <el-form-item label="终端号" prop="machineNo">
-          <el-input size="small" v-model="editForm.machineNo" auto-complete="off" placeholder="请输入终端号"></el-input>
+        <el-form-item label="批次号" prop="jobId">
+          <el-input size="small"  v-model="editForm.jobId" auto-complete="off" placeholder="批次号"></el-input>
         </el-form-item>
-        <el-form-item label="支付方式" prop="payType">
-          <el-select size="small" v-model="editForm.payType" placeholder="请选择" class="userRole">
+        <el-form-item label="跑批描述" prop="jobDesc">
+          <el-input size="small" v-model="editForm.jobDesc" auto-complete="off" placeholder="跑批描述"></el-input>
+        </el-form-item>
+        <el-form-item label="时间规则" prop="jobCron">
+          <el-select size="small" v-model="editForm.jobCron" placeholder="时间规则" class="userRole">
             <el-option v-for="type in payType" :label="type.key" :value="type.value" :key="type.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="配置序号" prop="configId">
-          <el-input size="small" v-model="editForm.configId" auto-complete="off" placeholder="请输入配置序号"></el-input>
+        <el-form-item label="类路径" prop="jobPath">
+          <el-input size="small" v-model="editForm.jobPath" auto-complete="off" placeholder="类路径"></el-input>
         </el-form-item>
-        <el-form-item label="显示名称" prop="configName">
-          <el-input size="small" v-model="editForm.configName" auto-complete="off" placeholder="请输入显示名称"></el-input>
-        </el-form-item>
-        <el-form-item label="状态" prop="payOpen">
-          <el-select size="small" v-model="editForm.payOpen" placeholder="请选择" class="userRole">
+        <el-form-item label="状态" prop="jobStat">
+          <el-select size="small" v-model="editForm.jobStat" placeholder="请选择" class="userRole">
             <el-option label="正常" value="T"></el-option>
             <el-option label="禁用" value="N"></el-option>
           </el-select>
@@ -105,29 +107,28 @@ export default {
         { key: '会员余额支付', value: 9 }
       ],
       editForm: {
-        tcId: '',
-        machineNo: '',
-        payType: '',
-        configId: '',
-        configName: '',
-        payOpen: '',
+        jobId: '',
+        jobDesc: '',
+        jobCron: '',
+        jobPath: '',
+        jobStat: '',
         token: localStorage.getItem('logintoken')
       },
       // rules表单验证
       rules: {
-        machineNo: [
+        jobId: [
           { required: true, message: '请输入终端号', trigger: 'blur' }
         ],
-        payType: [
+        jobDesc: [
+          { required: true, message: '请输入终端号', trigger: 'blur' }
+        ],
+        jobCron: [
           { required: true, message: '请选择支付方式', trigger: 'blur' }
         ],
-        configId: [
+        jobPath: [
           { required: true, message: '请输入配置序号', trigger: 'blur' }
         ],
-        configName: [
-          { required: true, message: '请输入显示名称', trigger: 'blur' }
-        ],
-        payOpen: [{ required: true, message: '请选择状态', trigger: 'blur' }]
+        jobStat: [{ required: true, message: '请选择状态', trigger: 'blur' }]
       },
       formInline: {
         page: 1,
@@ -184,13 +185,13 @@ export default {
             editUser: null,
             addTime: null,
             editTime: 1524046759000,
-            tcId: 1,
+            jobId: 1,
             deptId: 1,
-            machineNo: '564565656666',
-            payType: 3,
-            payOpen: 'T',
+            jobDesc: '564565656666',
+            jobCron: 3,
+            jobStat: 'T',
             configId: 63,
-            configName: '微信',
+            jobPath: '微信',
             posNo: '098'
           },
           {
@@ -198,13 +199,13 @@ export default {
             editUser: null,
             addTime: null,
             editTime: null,
-            tcId: 2,
+            jobId: 2,
             deptId: 1,
-            machineNo: '66666666',
-            payType: 2,
-            payOpen: 'T',
+            jobDesc: '66666666',
+            jobCron: 2,
+            jobStat: 'T',
             configId: 64,
-            configName: '支付宝',
+            jobPath: '支付宝',
             posNo: null
           },
           {
@@ -212,13 +213,13 @@ export default {
             editUser: null,
             addTime: null,
             editTime: null,
-            tcId: 3,
+            jobId: 3,
             deptId: 1,
-            machineNo: '93066545645546500791',
-            payType: 6,
-            payOpen: 'T',
+            jobDesc: '93066545645546500791',
+            jobCron: 6,
+            jobStat: 'T',
             configId: 67,
-            configName: '银商微信、支付宝',
+            jobPath: '银商微信、支付宝',
             posNo: null
           },
           {
@@ -226,27 +227,13 @@ export default {
             editUser: null,
             addTime: null,
             editTime: null,
-            tcId: 4,
+            jobId: 4,
             deptId: 1,
-            machineNo: '65545656565',
-            payType: 6,
-            payOpen: 'T',
+            jobDesc: '65545656565',
+            jobCron: 6,
+            jobStat: 'T',
             configId: 67,
-            configName: '银商微信、支付宝',
-            posNo: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1527409037000,
-            editTime: 1527409037000,
-            tcId: 6,
-            deptId: 1,
-            machineNo: '565654545454545',
-            payType: 6,
-            payOpen: 'T',
-            configId: 96,
-            configName: '微信',
+            jobPath: '银商微信、支付宝',
             posNo: null
           }
         ]
@@ -294,24 +281,29 @@ export default {
       this.getdata(this.formInline)
     },
     //显示编辑界面
+    // jobId: '',
+        // jobDesc: '',
+        // jobCron: '',
+        // jobPath: '',
+        // jobStat: '',
     handleEdit: function(index, row) {
       this.editFormVisible = true
       if (row != undefined && row != 'undefined') {
         this.title = '修改'
-        this.editForm.tcId = row.tcId
-        this.editForm.machineNo = row.machineNo
-        this.editForm.configId = row.configId
-        this.editForm.payType = row.payType
-        this.editForm.configName = row.configName
-        this.editForm.payOpen = row.payOpen
+        this.editForm.jobId = row.jobId
+        this.editForm.jobDesc = row.jobDesc
+        this.editForm.jobCron = row.jobCron
+        this.editForm.jobPath = row.jobPath
+        this.editForm.jobStat = row.jobStat
+        // this.editForm.payOpen = row.payOpen
       } else {
         this.title = '添加'
-        this.editForm.tcId = ''
-        this.editForm.machineNo = ''
-        this.editForm.payType = ''
-        this.editForm.configId = ''
-        this.editForm.configName = ''
-        this.editForm.payOpen = ''
+        this.editForm.jobId = ''
+        this.editForm.jobDesc = ''
+        this.editForm.jobCron = ''
+        this.editForm.jobPath = ''
+        this.editForm.jobStat = ''
+        // this.editForm.payOpen = ''
       }
     },
     // 编辑、增加页面保存方法
