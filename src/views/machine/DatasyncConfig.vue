@@ -11,7 +11,7 @@
     <!-- 搜索筛选 -->
     <el-form :inline="true" :model="formInline" class="user-search">
       <el-form-item>
-        <el-input size="small" v-model="formInline.machineNo" placeholder="输入系统编号"></el-input>
+        <el-input size="small" v-model="formInline.sysCode" placeholder="输入系统编号"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button size="small" type="primary" icon="el-icon-search" @click="search">搜索</el-button>
@@ -33,16 +33,10 @@
       <el-table-column sortable prop="sysApi" label="接口地址" width="200">
       </el-table-column>
       <el-table-column sortable prop="sysTime" label="修改时间" width="200">
-        <template slot-scope="scope">
-          <div>{{scope.row.sysTime|timestampToTime}}</div>
-          </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column sortable prop="editUser" label="修改人" width="150">
       </el-table-column>
       <el-table-column align="center" label="操作" min-width="300">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="deleteUser(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -56,9 +50,7 @@
           <el-input size="small" v-model="editForm.sysCode" auto-complete="off" placeholder="请输入系统编号"></el-input>
         </el-form-item>
         <el-form-item label="系统名称" prop="sysName">
-          <el-select size="small" v-model="editForm.sysName" placeholder="请输入系统名称" class="userRole">
-            <el-option v-for="type in payType" :label="type.key" :value="type.value" :key="type.value"></el-option>
-          </el-select>
+           <el-input size="small" v-model="editForm.sysName" auto-complete="off" placeholder="请输入系统名称"></el-input>
         </el-form-item>
         <el-form-item label="指定队列" prop="sysQueue">
           <el-input size="small" v-model="editForm.sysQueue" auto-complete="off" placeholder="请输入指定队列"></el-input>
@@ -89,9 +81,9 @@
 
 <script>
 import {
-  MachineConfigList,
-  MachineConfigSave,
-  MachineConfigDelete
+  SyncList,
+  SyncEdit,
+  SyncAdd,
 } from '../../api/payMG'
 import Pagination from '../../components/Pagination'
 export default {
@@ -102,23 +94,23 @@ export default {
       loading: false, //是显示加载
       editFormVisible: false, //控制编辑页面显示与隐藏
       title: '添加',
-      payType: [
-        { key: '现金', value: 1 },
-        { key: '支付宝', value: 2 },
-        { key: '微信', value: 3 },
-        { key: 'POS通', value: 4 },
-        { key: '闪付', value: 5 },
-        { key: 'POS通C扫B', value: 6 },
-        { key: '银联二维码', value: 8 },
-        { key: '会员余额支付', value: 9 }
-      ],
       editForm: {
         sysCode: '',
         sysName: '',
         sysQueue: '',
         sysRoutekey: '',
         sysApi: '',
-        token: localStorage.getItem('logintoken')
+        sysTime: '',
+        sysIndex: '',
+      },
+      addEditForm: {
+        sysCode: '',
+        sysName: '',
+        sysQueue: '',
+        sysRoutekey: '',
+        sysApi: '',
+        sysTime: '',
+        sysIndex: '',
       },
       // rules表单验证
       rules: {
@@ -140,6 +132,7 @@ export default {
         payOpen: [{ required: true, message: '请选择状态', trigger: 'blur' }]
       },
       formInline: {
+        sysCode: '',
         page: 1,
         limit: 10,
         varLable: '',
@@ -173,181 +166,150 @@ export default {
    * 创建完毕
    */
   created() {
-    this.getdata(this.formInline)
+    this.freshPage()
   },
 
   /**
    * 里面的方法只有被调用才会执行
    */
   methods: {
-    // 获取公司列表
-    getdata(parameter) {
-      this.loading = true
-      // 模拟数据
-      let res = {
-        code: 0,
-        msg: null,
-        count: 5,
-        data: [
-          {
-            addUser: null,
-            editUser: null,
-            addTime: null,
-            sysTime: 1524046759000,
-            tcId: 1,
-            deptId: 1,
-            sysCode: '564565656666',
-            sysRoutekey: 3,
-            sysName: 'T',
-            sysApi: 63,
-            sysQueue: '微信',
-            posNo: '098'
-          },
-         {
-            addUser: null,
-            editUser: null,
-            addTime: null,
-            sysTime: 1524046759000,
-            tcId: 1,
-            deptId: 1,
-            sysCode: '564565656666',
-            sysRoutekey: 3,
-            sysName: 'T',
-            sysApi: 63,
-            sysQueue: '微信',
-            posNo: '098'
-          },
-         {
-            addUser: null,
-            editUser: null,
-            addTime: null,
-            sysTime: 1524046759000,
-            tcId: 1,
-            deptId: 1,
-            sysCode: '564565656666',
-            sysRoutekey: 3,
-            sysName: 'T',
-            sysApi: 63,
-            sysQueue: '微信',
-            posNo: '098'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: null,
-            sysTime: 1524046759000,
-            tcId: 1,
-            deptId: 1,
-            sysCode: '564565656666',
-            sysRoutekey: 3,
-            sysName: 'T',
-            sysApi: 63,
-            sysQueue: '微信',
-            posNo: '098'
-          },
-         {
-            addUser: null,
-            editUser: null,
-            addTime: null,
-            sysTime: 1524046759000,
-            tcId: 1,
-            deptId: 1,
-            sysCode: '564565656666',
-            sysRoutekey: 3,
-            sysName: 'T',
-            sysApi: 63,
-            sysQueue: '微信',
-            posNo: '098'
+    freshPage(){
+     let _this = this;
+     _this.loading = true
+     //请求后台数据
+     debugger
+     SyncList(_this.pageparm)
+     .then(res => {
+       if ("0000" == res.code) {
+          this.$message({
+              type: 'success',
+              message: '刷新成功!'
+            })
+            let pageSize = res.list.length
+            if(_this.pageparm.pageSize < pageSize){
+               _this.totalList = res.list
+               _this.listData = res.list.slice(0,_this.pageparm.pageSize) 
+            }else{
+              _this.listData = res.list;
+            }
+            _this.loading = false
+            _this.pageparm.total = pageSize 
+          } else {
+            this.$message({
+              type: 'info',
+              message: res.error_msg
+            })
           }
-        ]
-      }
-      this.loading = false
-      this.listData = res.data
-      // 分页赋值
-      this.pageparm.currentPage = this.formInline.page
-      this.pageparm.pageSize = this.formInline.limit
-      this.pageparm.total = res.count
-      // 模拟数据结束
-
-      /***
-       * 调用接口，注释上面模拟数据 取消下面注释
-       */
-      // MachineConfigList(parameter)
-      //   .then(res => {
-      //     this.loading = false
-      //     if (res.success == false) {
-      //       this.$message({
-      //         type: 'info',
-      //         message: res.msg
-      //       })
-      //     } else {
-      //       this.listData = res.data
-      //       // 分页赋值
-      //       this.pageparm.currentPage = this.formInline.page
-      //       this.pageparm.pageSize = this.formInline.limit
-      //       this.pageparm.total = res.count
-      //     }
-      //   })
-      //   .catch(err => {
-      //     this.loading = false
-      //     this.$message.error('菜单加载失败，请稍后再试！')
-      //   })
-    },
-    // 分页插件事件
-    callFather(parm) {
-      this.formInline.page = parm.currentPage
-      this.formInline.limit = parm.pageSize
-      this.getdata(this.formInline)
+     })
+      .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '初次刷新失败'
+          })
+        })
     },
     // 搜索事件
     search() {
-      this.getdata(this.formInline)
+      debugger
+      let _this = this
+      _this.loading = true
+      _this.loading = false
+      SyncList(_this.formInline)
+     .then(res => {
+       if ("0000" == res.code) {
+          this.$message({
+              type: 'success',
+              message: '查询成功!'
+            })
+            let pageSize = res.list.length
+            if(_this.pageparm.pageSize < pageSize){
+               _this.totalList = res.list
+               _this.listData = res.list.slice(0,_this.pageparm.pageSize) 
+            }else{
+              _this.listData = res.list;
+            }
+            _this.loading = false
+            _this.pageparm.total = pageSize 
+          } else {
+            this.$message({
+              type: 'info',
+              message: res.error_msg
+            })
+          }
+     })
+      .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '查询失败!'
+          })
+        })
+    },
+    // 分页插件事件
+    callFather(parm) {
+      // let currentPage = parm.currentPage % 1000 == 0 ? parm.currentPage : parm.currentPage % 1000;
+      this.listData = this.totalList.slice((parm.currentPage-1) * 10,parm.currentPage * 10);
+      //当翻页到最后一页，再次调用
+      debugger
+      if(parm.currentPage * 10 == this.pageparm.total){
+        this.pageparm.currentPage = parm.currentPage + 1;
+        this.freshPage();
+      }
     },
     //显示编辑界面
-    // editForm: {
-    //     sysCode: '',
-    //     sysName: '',
-    //     sysQueue: '',
-    //     sysRoutekey: '',
-    //     sysApi: '',
-    //     token: localStorage.getItem('logintoken')
-    //   },
     handleEdit: function(index, row) {
+      debugger
       this.editFormVisible = true
+      let editForm = {
+          sysCode: '',
+          sysName: '',
+          sysQueue: '',
+          sysRoutekey: '',
+          sysApi: '',
+          sysTime: '',
+          sysIndex: ''
+        }
       if (row != undefined && row != 'undefined') {
         this.title = '修改'
-        this.editForm.sysCode = row.sysCode
-        this.editForm.sysName = row.sysName
-        this.editForm.sysQueue = row.sysQueue
-        this.editForm.sysRoutekey = row.sysRoutekey
-        this.editForm.sysApi = row.sysApi
-        // this.editForm.payOpen = row.payOpen
+        let editTime = this.fromatTimeStamp();
+        editForm.sysCode = row.sysCode
+        editForm.sysName = row.sysName
+        editForm.sysQueue = row.sysQueue
+        editForm.sysRoutekey = row.sysRoutekey
+        editForm.sysApi = row.sysApi
+        editForm.sysTime = editTime
+        editForm.sysIndex = index
+        this.editForm = editForm
       } else {
+        this.addEditForm = JSON.parse(JSON.stringify(this.editForm));
         this.title = '添加'
         this.editForm.sysCode = ''
         this.editForm.sysName = ''
         this.editForm.sysQueue = ''
         this.editForm.sysRoutekey = ''
         this.editForm.sysApi = ''
-        // this.editForm.payOpen = ''
       }
     },
     // 编辑、增加页面保存方法
     submitForm(editData) {
+      debugger
+      let _this = this
       this.$refs[editData].validate(valid => {
         if (valid) {
-          MachineConfigSave(this.editForm)
+          if('修改' == _this.title){
+            SyncEdit(_this.editForm)
             .then(res => {
-              this.editFormVisible = false
-              this.loading = false
-              if (res.success) {
-                this.getdata(this.formInline)
-                this.$message({
+              _this.editFormVisible = false
+              _this.loading = false
+              let newData
+              if ("0000" == res.code) {
+                // _this.listData[_this.editForm.jobIndex] = _this.editForm
+                _this.$set(_this.listData,_this.editForm.sysIndex,_this.editForm)
+                _this.$message({
                   type: 'success',
-                  message: '公司保存成功！'
+                  message: '修改成功！'
                 })
               } else {
-                this.$message({
+                _this.$message({
                   type: 'info',
                   message: res.msg
                 })
@@ -356,51 +318,53 @@ export default {
             .catch(err => {
               this.editFormVisible = false
               this.loading = false
-              this.$message.error('支付配置信息保存失败，请稍后再试！')
+              this.$message.error('修改失败，请稍后再试！')
             })
+          }else{
+             SyncAdd(_this.editForm)
+            .then(res => {
+              _this.editFormVisible = false
+              _this.loading = false
+              let newData
+              if ("0000" == res.code) {
+                // _this.listData[_this.editForm.jobIndex] = _this.editForm
+                _this.$set(_this.listData,_this.editForm.jobIndex,_this.editForm)
+                _this.$message({
+                  type: 'success',
+                  message: '新增成功！'
+                })
+              } else {
+                _this.$message({
+                  type: 'info',
+                  message: res.msg
+                })
+              }
+            })
+            .catch(err => {
+              this.editFormVisible = false
+              this.loading = false
+              this.$message.error('新增失败，请稍后再试！')
+            })
+          }
         } else {
           return false
         }
       })
     },
-    // 删除公司
-    deleteUser(index, row) {
-      this.$confirm('确定要删除吗?', '信息', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          MachineConfigDelete(row.deptId)
-            .then(res => {
-              if (res.success) {
-                this.$message({
-                  type: 'success',
-                  message: '公司已删除!'
-                })
-                this.getdata(this.formInline)
-              } else {
-                this.$message({
-                  type: 'info',
-                  message: res.msg
-                })
-              }
-            })
-            .catch(err => {
-              this.loading = false
-              this.$message.error('支付配置信息删除失败，请稍后再试！')
-            })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
     // 关闭编辑、增加弹出框
     closeDialog() {
       this.editFormVisible = false
+      this.$set(this.listData,this.addEditForm.sysIndex,this.addEditForm)
+    },
+    fromatTimeStamp() {
+      let dt = new Date();
+      var y=dt.getFullYear();
+      var mt=dt.getMonth()+1;
+      var day=dt.getDate();
+      var h=dt.getHours();//获取时
+      var m=dt.getMinutes();//获取分
+      var s=dt.getSeconds();//获取秒
+      return y+"-"+mt+"-"+day+' '+ h+":"+m + ":"+s;
     }
   }
 }

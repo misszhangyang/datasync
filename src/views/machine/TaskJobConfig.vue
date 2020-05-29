@@ -11,7 +11,7 @@
     <!-- 搜索筛选 -->
     <el-form :inline="true" :model="formInline" class="user-search">
       <el-form-item>
-        <el-input size="small" v-model="formInline.machineNo" placeholder="输入批次号"></el-input>
+        <el-input size="small" v-model="formInline.jobId" placeholder="输入任务id"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button size="small" type="primary" icon="el-icon-search" @click="search">搜索</el-button>
@@ -22,7 +22,7 @@
     <el-table size="small" :data="listData" highlight-current-row v-loading="loading" border element-loading-text="拼命加载中" style="width: 100%;">
       <el-table-column align="center" type="selection" width="60">
       </el-table-column>
-      <el-table-column sortable prop="jobId" label="批次号" width="200">
+      <el-table-column sortable prop="jobId" label="任务id" width="200">
       </el-table-column>
       <el-table-column sortable prop="jobDesc" label="跑批描述" width="200">
       </el-table-column>
@@ -33,16 +33,14 @@
       <el-table-column sortable prop="jobStat" label="状态" width="200">
       </el-table-column>
       <el-table-column sortable prop="jobTime" label="修改时间" width="200">
-        <template slot-scope="scope">
-          <div>{{scope.row.editTime|timestampToTime}}</div>
-          </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column sortable prop="editUser" label="修改人" width="150">
+        <!-- <template slot-scope="scope"> -->
+          <!-- <div>{{scope.row.editTime|timestampToTime}}</div>
+          </el-switch> -->
+        <!-- </template>  -->
       </el-table-column>
       <el-table-column align="center" label="操作" min-width="300">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="deleteUser(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -52,16 +50,14 @@
     <!-- 编辑界面 -->
     <el-dialog :title="title" :visible.sync="editFormVisible" width="30%" @click="closeDialog">
       <el-form label-width="120px" :model="editForm" :rules="rules" ref="editForm">
-        <el-form-item label="批次号" prop="jobId">
-          <el-input size="small"  v-model="editForm.jobId" auto-complete="off" placeholder="批次号"></el-input>
+        <el-form-item label="任务id" prop="jobId">
+          <el-input size="small"  v-model="editForm.jobId" auto-complete="off" placeholder="任务id"></el-input>
         </el-form-item>
         <el-form-item label="跑批描述" prop="jobDesc">
           <el-input size="small" v-model="editForm.jobDesc" auto-complete="off" placeholder="跑批描述"></el-input>
         </el-form-item>
         <el-form-item label="时间规则" prop="jobCron">
-          <el-select size="small" v-model="editForm.jobCron" placeholder="时间规则" class="userRole">
-            <el-option v-for="type in payType" :label="type.key" :value="type.value" :key="type.value"></el-option>
-          </el-select>
+          <el-input size="small" v-model="editForm.jobCron" auto-complete="off" placeholder="时间规则"></el-input>
         </el-form-item>
         <el-form-item label="类路径" prop="jobPath">
           <el-input size="small" v-model="editForm.jobPath" auto-complete="off" placeholder="类路径"></el-input>
@@ -73,7 +69,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" >
         <el-button size="small" @click="closeDialog">取消</el-button>
         <el-button size="small" type="primary" :loading="loading" class="title" @click="submitForm('editForm')">保存</el-button>
       </div>
@@ -83,35 +79,38 @@
 
 <script>
 import {
-  MachineConfigList,
-  MachineConfigSave,
-  MachineConfigDelete
+  TaskList,
+  TaskEdit,
+  TaskAdd,
 } from '../../api/payMG'
 import Pagination from '../../components/Pagination'
+// import fromatTimeStamp from '../utils/util'
 export default {
   data() {
     return {
       nshow: true, //switch开启
       fshow: false, //switch关闭
+      // isRouterAlive: true, //列表显示关闭
       loading: false, //是显示加载
       editFormVisible: false, //控制编辑页面显示与隐藏
       title: '添加',
-      payType: [
-        { key: '现金', value: 1 },
-        { key: '支付宝', value: 2 },
-        { key: '微信', value: 3 },
-        { key: 'POS通', value: 4 },
-        { key: '闪付', value: 5 },
-        { key: 'POS通C扫B', value: 6 },
-        { key: '银联二维码', value: 8 },
-        { key: '会员余额支付', value: 9 }
-      ],
       editForm: {
         jobId: '',
         jobDesc: '',
         jobCron: '',
         jobPath: '',
         jobStat: '',
+        jobTime: '',
+        token: localStorage.getItem('logintoken')
+      },
+      addEditForm: {
+        jobId: '',
+        jobDesc: '',
+        jobCron: '',
+        jobPath: '',
+        jobStat: '',
+        jobTime: '',
+        jobIndex: '',
         token: localStorage.getItem('logintoken')
       },
       // rules表单验证
@@ -131,11 +130,8 @@ export default {
         jobStat: [{ required: true, message: '请选择状态', trigger: 'blur' }]
       },
       formInline: {
+        jobId: '',
         page: 1,
-        limit: 10,
-        varLable: '',
-        varName: '',
-        token: localStorage.getItem('logintoken')
       },
       // 删除部门
       seletedata: {
@@ -148,7 +144,7 @@ export default {
       pageparm: {
         currentPage: 1,
         pageSize: 10,
-        total: 10
+        total: 0
       }
     }
   },
@@ -164,164 +160,150 @@ export default {
    * 创建完毕
    */
   created() {
-    this.getdata(this.formInline)
+    this.freshPage()
   },
 
   /**
    * 里面的方法只有被调用才会执行
    */
   methods: {
-    // 获取公司列表
-    getdata(parameter) {
-      this.loading = true
-      // 模拟数据
-      let res = {
-        code: 0,
-        msg: null,
-        count: 5,
-        data: [
-          {
-            addUser: null,
-            editUser: null,
-            addTime: null,
-            editTime: 1524046759000,
-            jobId: 1,
-            deptId: 1,
-            jobDesc: '564565656666',
-            jobCron: 3,
-            jobStat: 'T',
-            configId: 63,
-            jobPath: '微信',
-            posNo: '098'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: null,
-            editTime: null,
-            jobId: 2,
-            deptId: 1,
-            jobDesc: '66666666',
-            jobCron: 2,
-            jobStat: 'T',
-            configId: 64,
-            jobPath: '支付宝',
-            posNo: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: null,
-            editTime: null,
-            jobId: 3,
-            deptId: 1,
-            jobDesc: '93066545645546500791',
-            jobCron: 6,
-            jobStat: 'T',
-            configId: 67,
-            jobPath: '银商微信、支付宝',
-            posNo: null
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: null,
-            editTime: null,
-            jobId: 4,
-            deptId: 1,
-            jobDesc: '65545656565',
-            jobCron: 6,
-            jobStat: 'T',
-            configId: 67,
-            jobPath: '银商微信、支付宝',
-            posNo: null
+    freshPage(){
+     let _this = this;
+     _this.loading = true
+     //请求后台数据
+     debugger
+     TaskList(_this.pageparm)
+     .then(res => {
+       if ("0000" == res.code) {
+          this.$message({
+              type: 'success',
+              message: '刷新成功!'
+            })
+            let pageSize = res.list.length
+            if(_this.pageparm.pageSize < pageSize){
+               _this.totalList = res.list
+               _this.listData = res.list.slice(0,_this.pageparm.pageSize) 
+            }else{
+              _this.listData = res.list;
+            }
+            _this.loading = false
+            _this.pageparm.total = pageSize 
+          } else {
+            this.$message({
+              type: 'info',
+              message: res.error_msg
+            })
           }
-        ]
-      }
-      this.loading = false
-      this.listData = res.data
-      // 分页赋值
-      this.pageparm.currentPage = this.formInline.page
-      this.pageparm.pageSize = this.formInline.limit
-      this.pageparm.total = res.count
-      // 模拟数据结束
-
-      /***
-       * 调用接口，注释上面模拟数据 取消下面注释
-       */
-      // MachineConfigList(parameter)
-      //   .then(res => {
-      //     this.loading = false
-      //     if (res.success == false) {
-      //       this.$message({
-      //         type: 'info',
-      //         message: res.msg
-      //       })
-      //     } else {
-      //       this.listData = res.data
-      //       // 分页赋值
-      //       this.pageparm.currentPage = this.formInline.page
-      //       this.pageparm.pageSize = this.formInline.limit
-      //       this.pageparm.total = res.count
-      //     }
-      //   })
-      //   .catch(err => {
-      //     this.loading = false
-      //     this.$message.error('菜单加载失败，请稍后再试！')
-      //   })
-    },
-    // 分页插件事件
-    callFather(parm) {
-      this.formInline.page = parm.currentPage
-      this.formInline.limit = parm.pageSize
-      this.getdata(this.formInline)
+     })
+      .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '初次刷新失败'
+          })
+        })
     },
     // 搜索事件
     search() {
-      this.getdata(this.formInline)
+      debugger
+      let _this = this
+      _this.loading = true
+      _this.loading = false
+      TaskList(_this.formInline)
+     .then(res => {
+       if ("0000" == res.code) {
+          this.$message({
+              type: 'success',
+              message: '查询成功!'
+            })
+            let pageSize = res.list.length
+            if(_this.pageparm.pageSize < pageSize){
+               _this.totalList = res.list
+               _this.listData = res.list.slice(0,_this.pageparm.pageSize) 
+            }else{
+              _this.listData = res.list;
+            }
+            _this.loading = false
+            _this.pageparm.total = pageSize 
+          } else {
+            this.$message({
+              type: 'info',
+              message: res.error_msg
+            })
+          }
+     })
+      .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '查询失败!'
+          })
+        })
+    },
+    // 分页插件事件
+    callFather(parm) {
+      // let currentPage = parm.currentPage % 1000 == 0 ? parm.currentPage : parm.currentPage % 1000;
+      this.listData = this.totalList.slice((parm.currentPage-1) * 10,parm.currentPage * 10);
+      //当翻页到最后一页，再次调用
+      debugger
+      if(parm.currentPage * 10 == this.pageparm.total){
+        this.pageparm.currentPage = parm.currentPage + 1;
+        this.freshPage();
+      }
     },
     //显示编辑界面
-    // jobId: '',
-        // jobDesc: '',
-        // jobCron: '',
-        // jobPath: '',
-        // jobStat: '',
     handleEdit: function(index, row) {
+      debugger
       this.editFormVisible = true
+      let editForm = {
+            jobId: '',
+            jobDesc: '',
+            jobCron: '',
+            jobPath: '',
+            jobStat: '',
+            jobTime: '',
+            jobIndex: ''
+        }
       if (row != undefined && row != 'undefined') {
         this.title = '修改'
-        this.editForm.jobId = row.jobId
-        this.editForm.jobDesc = row.jobDesc
-        this.editForm.jobCron = row.jobCron
-        this.editForm.jobPath = row.jobPath
-        this.editForm.jobStat = row.jobStat
-        // this.editForm.payOpen = row.payOpen
+        let editTime = this.fromatTimeStamp();
+        editForm.jobId = row.jobId
+        editForm.jobDesc = row.jobDesc
+        editForm.jobCron = row.jobCron
+        editForm.jobPath = row.jobPath
+        editForm.jobStat = row.jobStat
+        editForm.jobTime = editTime
+        editForm.jobIndex = index
+        this.editForm = editForm
       } else {
+        this.addEditForm = JSON.parse(JSON.stringify(this.editForm));
         this.title = '添加'
         this.editForm.jobId = ''
         this.editForm.jobDesc = ''
         this.editForm.jobCron = ''
         this.editForm.jobPath = ''
         this.editForm.jobStat = ''
-        // this.editForm.payOpen = ''
       }
     },
     // 编辑、增加页面保存方法
     submitForm(editData) {
+      debugger
+      let _this = this
       this.$refs[editData].validate(valid => {
         if (valid) {
-          MachineConfigSave(this.editForm)
+          if('修改' == _this.title){
+            TaskEdit(_this.editForm)
             .then(res => {
-              this.editFormVisible = false
-              this.loading = false
-              if (res.success) {
-                this.getdata(this.formInline)
-                this.$message({
+              _this.editFormVisible = false
+              _this.loading = false
+              let newData
+              if ("0000" == res.code) {
+                // _this.listData[_this.editForm.jobIndex] = _this.editForm
+                _this.$set(_this.listData,_this.editForm.jobIndex,_this.editForm)
+                _this.$message({
                   type: 'success',
-                  message: '公司保存成功！'
+                  message: '修改成功！'
                 })
               } else {
-                this.$message({
+                _this.$message({
                   type: 'info',
                   message: res.msg
                 })
@@ -330,51 +312,53 @@ export default {
             .catch(err => {
               this.editFormVisible = false
               this.loading = false
-              this.$message.error('支付配置信息保存失败，请稍后再试！')
+              this.$message.error('修改失败，请稍后再试！')
             })
+          }else{
+             TaskAdd(_this.editForm)
+            .then(res => {
+              _this.editFormVisible = false
+              _this.loading = false
+              let newData
+              if ("0000" == res.code) {
+                // _this.listData[_this.editForm.jobIndex] = _this.editForm
+                _this.$set(_this.listData,_this.editForm.jobIndex,_this.editForm)
+                _this.$message({
+                  type: 'success',
+                  message: '新增成功！'
+                })
+              } else {
+                _this.$message({
+                  type: 'info',
+                  message: res.msg
+                })
+              }
+            })
+            .catch(err => {
+              this.editFormVisible = false
+              this.loading = false
+              this.$message.error('新增失败，请稍后再试！')
+            })
+          }
         } else {
           return false
         }
       })
     },
-    // 删除公司
-    deleteUser(index, row) {
-      this.$confirm('确定要删除吗?', '信息', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          MachineConfigDelete(row.deptId)
-            .then(res => {
-              if (res.success) {
-                this.$message({
-                  type: 'success',
-                  message: '公司已删除!'
-                })
-                this.getdata(this.formInline)
-              } else {
-                this.$message({
-                  type: 'info',
-                  message: res.msg
-                })
-              }
-            })
-            .catch(err => {
-              this.loading = false
-              this.$message.error('支付配置信息删除失败，请稍后再试！')
-            })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
     // 关闭编辑、增加弹出框
     closeDialog() {
       this.editFormVisible = false
+      this.$set(this.listData,this.addEditForm.jobIndex,this.addEditForm)
+    },
+    fromatTimeStamp() {
+      let dt = new Date();
+      var y=dt.getFullYear();
+      var mt=dt.getMonth()+1;
+      var day=dt.getDate();
+      var h=dt.getHours();//获取时
+      var m=dt.getMinutes();//获取分
+      var s=dt.getSeconds();//获取秒
+      return y+"-"+mt+"-"+day+' '+ h+":"+m + ":"+s;
     }
   }
 }

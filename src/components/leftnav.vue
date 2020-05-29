@@ -65,7 +65,7 @@ export default {
               icon: 'icon-order-manage',
               menuname: '发送MQ',
               hasThird: 'N',
-              url: 'push/Promq',
+              url: 'push/Pushmq',
               menus: null
             },
              {
@@ -106,7 +106,7 @@ export default {
               icon: 'icon-provider-manage',
               menuname: '跑批信息配置',
               hasThird: 'N',
-              url: 'machine/MachineConfig',
+              url: 'machine/TaskJobConfig',
               menus: null
             },
             {
@@ -117,14 +117,6 @@ export default {
               url: 'machine/DatasyncConfig',
               menus: null
             },
-            // {
-            //   menuid: 175,
-            //   icon: 'icon-provider-manage',
-            //   menuname: '支付配置',
-            //   hasThird: 'N',
-            //   url: 'pay/Config',
-            //   menus: null
-            // }
           ]
         },
         {
@@ -158,22 +150,6 @@ export default {
               url: 'system/Role',
               menus: null
             },
-            // {
-            //   menuid: 74,
-            //   icon: 'icon-cs-manage',
-            //   menuname: '公司管理',
-            //   hasThird: 'N',
-            //   url: 'system/Dept',
-            //   menus: null
-            // },
-            // {
-            //   menuid: 75,
-            //   icon: 'icon-promotion-manage',
-            //   menuname: '系统环境变量',
-            //   hasThird: 'N',
-            //   url: 'system/Variable',
-            //   menus: null
-            // },
             {
               menuid: 76,
               icon: 'icon-cms-manage',
@@ -184,23 +160,6 @@ export default {
             }
           ]
         }
-        // {
-        //   menuid: 150,
-        //   icon: 'li-icon-shangchengxitongtubiaozitihuayuanwenjian91',
-        //   menuname: '图表',
-        //   hasThird: null,
-        //   url: null,
-        //   menus: [
-        //     // {
-        //     //   menuid: 159,
-        //     //   icon: 'icon-provider-manage',
-        //     //   menuname: '数据可视化',
-        //     //   hasThird: 'N',
-        //     //   url: 'charts/statistics',
-        //     //   menus: null
-        //     // }
-        //   ]
-        // }
       ],
       msg: 'success'
     }

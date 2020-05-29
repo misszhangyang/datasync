@@ -10,20 +10,19 @@
       <el-breadcrumb-item>数据可视化</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 搜索，切换 -->
-    <el-row :gutter="23" class="row">
+  <div>
+      <el-row :gutter="23" class="row">
         <div class="top-left">
-            <el-breadcrumb-item>今日接收统计:</el-breadcrumb-item>
-            <el-breadcrumb-item>121121</el-breadcrumb-item>
+            <span>今日接收统计：{{this.totalNum}}</span>
         </div>
         <div class="top-center">
-            <el-breadcrumb-item>推送MQ错误：</el-breadcrumb-item>
-            <el-breadcrumb-item>121121</el-breadcrumb-item>
+           <span>推送MQ错误：{{this.pushMQNum}}</span>
         </div>
         <div class="top-right">
-            <el-breadcrumb-item>消费MQ错误：</el-breadcrumb-item>
-            <el-breadcrumb-item>121121</el-breadcrumb-item>
+           <span>消费MQ错误：{{this.consuMQNum}}</span>
         </div>
     </el-row>
+  </div>
     <!-- 统计图 -->
     <el-row :gutter="25" class="center">
       <el-col :span="8" class="text-c">
@@ -65,9 +64,12 @@ export default {
   name: "welcome",
   data() {
     return {
+      totalNum: 121212,
+      pushMQNum: 1212,
+      consuMQNum: 23213,
       machineNo: '',
       type: 'day',
-      //  销售总笔数 
+      // '近7日数据接收统计',
       SCEoption: {
         tooltip: {
           trigger: 'item',
@@ -78,13 +80,13 @@ export default {
             name: '近7日数据接收统计',
             icon: 'rect'
           }],
-          top: 1,
-          left: 1,
+          top: -4,
+          left: 0,
           itemGap: 10,
           itemWidth: 12,
           itemHeight: 12,
           textStyle: {
-            fontSize: 12,
+            fontSize: 13,
             color: "#323232"
           }
         },
@@ -97,7 +99,7 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+          data: ['1', '2', '3', '4', '5', '6', '7'],
           axisLine: {
             lineStyle: {
               color: "#999999",
@@ -134,7 +136,7 @@ export default {
           name: '近7日数据接收统计',
           type: 'bar',
           barGap: 0,
-          data: [50000, 70000, 80000, 40000, 50000, 30000, 40000, 60000, 50000, 40000, 60000, 40000],
+          data: [50000, 70000, 80000, 40000, 50000, 30000, 40000],
           barWidth: 10,
           itemStyle: {
             normal: {
@@ -160,7 +162,7 @@ export default {
           }
         }]
       },
-      //  销售总金额 
+      //近7日推送MQ统计 
       SUMoption: {
         tooltip: {
           trigger: 'item',
@@ -171,13 +173,13 @@ export default {
             name: '近7日推送MQ统计',
             icon: 'rect'
           }],
-          top: 1,
-          left: 1,
+          top: -4,
+          left: 0,
           itemGap: 10,
           itemWidth: 12,
           itemHeight: 12,
           textStyle: {
-            fontSize: 12,
+            fontSize: 13,
             color: "#323232"
           }
         },
@@ -190,7 +192,7 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+          data: ['1', '2', '3', '4', '5', '6', '7'],
           axisLine: {
             lineStyle: {
               color: "#999999",
@@ -228,14 +230,14 @@ export default {
           //   type: 'bar',
           type: 'line',
           barGap: 0,
-          data: [50000, 70000, 80000, 40000, 50000, 30000, 40000, 60000, 50000, 40000, 60000, 40000],
+          data: [50000, 70000, 80000, 40000, 50000, 30000, 40000],
           barWidth: 10,
           itemStyle: {
             color: "#108ff9"
           }
         }]
       },
-      //  总点击量
+      //近7日消费MQ统计
       Clickoption: {
         tooltip: {
           trigger: 'item',
@@ -246,13 +248,13 @@ export default {
             name: '近7日消费MQ统计',
             icon: 'rect'
           }],
-          top: 1,
-          left: 1,
+          top: -4,
+          left: 0,
           itemGap: 10,
           itemWidth: 12,
           itemHeight: 12,
           textStyle: {
-            fontSize: 12,
+            fontSize: 13,
             color: "#323232"
           }
         },
@@ -265,7 +267,7 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+          data: ['1', '2', '3', '4', '5', '6', '7'],
           axisLine: {
             lineStyle: {
               color: "#999999",
@@ -302,14 +304,14 @@ export default {
           name: '近7日消费MQ统计',
           type: 'bar',
           barGap: 0,
-          data: [50000, 10000, 80000, 30000, 50000, 60000, 40000, 80000, 50000, 20000, 60000, 40000],
+          data: [50000, 10000, 80000, 30000, 50000, 60000, 40000],
           barWidth: 10,
           itemStyle: {
             color: "#48cefd"
           }
         }]
       },
-      //  支付方式统计
+      //源系统发送占比
       payoption: {
         backgroundColor: '#2c343c',
         title: {
@@ -542,19 +544,22 @@ export default {
   height: 32vh;
 }
 .top-left {
+  display: inline-block;
   margin-left: 2%;
   font-size: 1.8rem;
-  color: aqua !important;
+  color: rebeccapurple;
 }
 .top-center {
-  margin-left: 35%;
+  display: inline-block;
+  margin-left: 11%;
   font-size: 1.8rem;
-  color: aqua !important;
+  color: rebeccapurple;
 }
 .top-right {
-  margin-left: 68.5%;
+  display: inline-block;
+  margin-left: 13.5%;
   font-size: 1.8rem;
-  color: aqua !important;
+  color: rebeccapurple;
 }
 .row {
   margin-top: 3%

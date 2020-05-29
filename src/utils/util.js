@@ -20,6 +20,17 @@ const timestampToTime = (timestamp) => {
         date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
     return Y + M + D + h + m + s
 };
+
+const fromatTimeStamp = (timestamp) =>{
+    let dt = new Date(timestamp);
+    var y=dt.getFullYear();
+    var mt=dt.getMonth()+1;
+    var day=dt.getDate();
+    var h=dt.getHours();//获取时
+    var m=dt.getMinutes();//获取分
+    var s=dt.getSeconds();//获取秒
+    return y+mt+day+h+m+s;
+}
 /**
  * 存储localStorage
  */
@@ -86,5 +97,6 @@ export {
     removeStore,
     setCookie,
     getCookie,
-    delCookie
+    delCookie,
+    fromatTimeStamp
 }

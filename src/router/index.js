@@ -5,29 +5,16 @@ import Router from 'vue-router';
 import login from '@/views/login';
 // 首页
 import index from '@/views/index';
-/**
- * 基础菜单
- */
 // 商品管理
 import Goods from '@/views/goods/Goods';
-// 机器信息管理
-import Machine from '@/views/machine/Machine';
-// 货道信息管理
-import MachineAisle from '@/views/machine/MachineAisle';
-/**
- * 订单管理
- */
 // 交易订单
-import Promq from '@/views/push/Promq';
+import Pushmq from '@/views/push/Pushmq';
 //MQ消费管理
 import Consumq from '@/views/push/Consumq';
 //数据补偿管理
 import RepairData from '@/views/push/RepairData';
 //数据文件补偿管理
 import RepairFile from '@/views/push/RepairFile';
-/**
- * 系统管理
- */
 // 用户管理
 import user from '@/views/system/user';
 // 菜单管理
@@ -42,20 +29,12 @@ import Variable from '@/views/system/Variable';
 import Permission from '@/views/system/Permission';
 // 配置管理
 import DatasyncConfig from '@/views/machine/DatasyncConfig';
-/**
- * 支付管理
- */
 // 支付配置信息npm
-import MachineConfig from '@/views/machine/MachineConfig';
-/**
- * 数据监控
- */
+import TaskJobConfig from '@/views/machine/TaskJobConfig';
 // 监控查询
 import druidLogin from '@/views/druid/login';
-
 // 图表界面
 import statistics from '@/views/charts/statistics';
-
 // 启用路由
 Vue.use(Router);
 
@@ -90,23 +69,9 @@ export default new Router({
                 requireAuth: true
             }
         }, {
-            path: '/machine/Machine',
-            name: '机器信息管理',
-            component: Machine,
-            meta: {
-                requireAuth: true
-            }
-        }, {
-            path: '/machine/MachineAisle',
-            name: '货道信息管理',
-            component: MachineAisle,
-            meta: {
-                requireAuth: true
-            }
-        }, {
-            path: '/push/Promq',
+            path: '/push/Pushmq',
             name: '推送MQ',
-            component: Promq,
+            component: Pushmq,
             meta: {
                 requireAuth: true
             }
@@ -175,9 +140,9 @@ export default new Router({
                 requireAuth: true
             }
         }, {
-            path: '/machine/MachineConfig',
+            path: '/machine/TaskJobConfig',
             name: '支付配置信息',
-            component: MachineConfig,
+            component: TaskJobConfig,
             meta: {
                 requireAuth: true
             }

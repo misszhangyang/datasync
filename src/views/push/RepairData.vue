@@ -20,17 +20,17 @@
         <el-input class="input" size="small" v-model="formInline.targetId" placeholder="目标系统id"></el-input>
       </el-form-item>
        <el-form-item label="推送状态">
-        <el-select class="input" size="small" v-model="formInline.roleId" placeholder="推送状态">
+        <el-select class="input" size="small" v-model="formInline.pushSta" placeholder="推送状态">
           <el-option selected label="请选择" value="0"></el-option>
-          <el-option v-for="parm in rapairList" :key="parm.code" :label="parm.desc" :value="parm.code"></el-option>
+          <el-option v-for="parm in rapairStatList" :key="parm.code" :label="parm.desc" :value="parm.code"></el-option>
         </el-select>
       </el-form-item> 
       <el-form-item label="开始时间">
-          <el-date-picker size="small" v-model="startTime" type="datetime" format="yyyy-MM-ddHH:mm:ss" value-format="yyyy-MM-ddHH:mm:ss" placeholder="开始时间">
+          <el-date-picker size="small" v-model="formInline.startTime" type="datetime" format="yyyy-MM-ddHH:mm:ss" value-format="yyyy-MM-ddHH:mm:ss" placeholder="开始时间">
           </el-date-picker>   
       </el-form-item>
       <el-form-item label="结束时间" >
-          <el-date-picker size="small" v-model="endTime" type="datetime" format="yyyy-MM-ddHH:mm:ss" value-format="yyyy-MM-ddHH:mm:ss" placeholder="结束时间">
+          <el-date-picker size="small" v-model="formInline.editTime" type="datetime" format="yyyy-MM-ddHH:mm:ss" value-format="yyyy-MM-ddHH:mm:ss" placeholder="结束时间">
           </el-date-picker>   
       </el-form-item>
       <el-form-item>
@@ -47,38 +47,36 @@
       </el-table-column>
       <el-table-column sortable prop="targetId" label="目标系统id" width="120" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column sortable prop="repairStat" label="补偿状态" width="120" show-overflow-tooltip>
-      </el-table-column>
       <el-table-column sortable prop="msgBody" label="消息体" width="180" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column sortable prop="otpFlag" label="操作类型" width="140" show-overflow-tooltip>
+      <el-table-column sortable prop="otpFlag" label="操作类型" width="100" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column sortable prop="sourceType" label="消息来源" width="120" show-overflow-tooltip>
+      <el-table-column sortable prop="pushStat" label="推送状态" width="100" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column sortable prop="createTime" label="创建时间" width="180" show-overflow-tooltip>
-        <template slot-scope="scope">
+      <el-table-column sortable prop="createTime" label="创建时间" width="150" show-overflow-tooltip>
+        <!-- <template slot-scope="scope">
           <div>{{scope.row.createTime|timestampToTime}}</div>
-        </template>
+        </template> -->
       </el-table-column>
-      <el-table-column sortable prop="editTime" label="修改时间" width="180" show-overflow-tooltip>
-        <template slot-scope="scope">
+      <el-table-column sortable prop="editTime" label="修改时间" width="150" show-overflow-tooltip>
+        <!-- <template slot-scope="scope">
           <div>{{scope.row.editTime|timestampToTime}}</div>
-        </template>
+        </template> -->
       </el-table-column>
-      <el-table-column align="center" label="操作" min-width="150">
+      <el-table-column align="center" label="操作" min-width="180">
         <template slot-scope="scope">
-          <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">预览</el-button> -->
-          <el-button size="mini" type="danger" @click="deleteUser(scope.$index, scope.row)">推送</el-button>
+          <el-button size="mini" type="primary"  @click="handleEdit(scope.$index, scope.row)">预览</el-button>
+          <el-button size="mini" type="danger" @click="pushData(scope.$index, scope.row)">推送</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页组件 -->
     <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
     <!-- 编辑界面 -->
-    <el-dialog :title="title" :visible.sync="editFormVisible" width="50%" @click="closeDialog('editForm')">
-      <el-form label-width="120px" :model="editForm" ref="editForm">
+    <el-dialog :title="title" :visible.sync="editFormVisible" width="40%" @click="closeDialog('editForm')">
+      <el-form label-width="100px" :model="editForm" ref="editForm">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="22">
             <el-form-item label="消息id">
               <el-input size="small" v-model="editForm.msgId" auto-complete="off" placeholder="请输入消息id" disabled></el-input>
             </el-form-item>
@@ -88,30 +86,27 @@
             <el-form-item label="目标系统id">
               <el-input size="small" v-model="editForm.targetId" auto-complete="off" placeholder="请输入目标系统id" disabled></el-input>
             </el-form-item>
-            <el-form-item label="补偿状态">
-              <el-input size="small" v-model="editForm.repairStat" auto-complete="off" placeholder="请输入补偿状态" disabled></el-input>
+            <el-form-item label="推送状态">
+              <el-input size="small" v-model="editForm.pushStat" auto-complete="off" placeholder="请输入推送状态" disabled></el-input>
             </el-form-item>
-            <el-form-item label="消息体">
-              <el-input size="small" v-model="editForm.msgBody" auto-complete="off" placeholder="请输入消息体" disabled></el-input>
+            <el-form-item label="消息类型">
+              <el-input size="small" v-model="editForm.msgType" auto-complete="off" placeholder="请输入消息类型" disabled></el-input>
             </el-form-item>
             <el-form-item label="操作类型">
               <el-input size="small" v-model="editForm.otpFlag" auto-complete="off" placeholder="请输入操作类型" disabled></el-input>
             </el-form-item>
-            <el-form-item label="消息来源">
-              <el-input size="small" v-model="editForm.sourceType" auto-complete="off" placeholder="请输入消息来源" disabled></el-input>
-            </el-form-item>
+             <el-form-item label="消息体">
+              <el-input size="medium" v-model="editForm.msgBody" auto-complete="off" readonly="true"></el-input>
+         </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="备注">
-          <el-input size="small" v-model="editForm.remark" auto-complete="off" placeholder="请输入微信证书路径" disabled></el-input>
-        </el-form-item>
       </el-form>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { OrderList, OrderRefund, OrderDelete } from '../../api/payMG'
+import { RepairDataList,RepairDataEdit} from '../../api/payMG'
 import Pagination from '../../components/Pagination'
 export default {
   data() {
@@ -119,38 +114,14 @@ export default {
       loading: false, //是显示加载
       editFormVisible: false, //控制编辑页面显示与隐藏
       title: '预览',
-      payType: [
-        { key: '请选择', value: 0 },
-        { key: '现金', value: 1 },
-        { key: '支付宝', value: 2 },
-        { key: '微信', value: 3 },
-        { key: 'POS通', value: 4 },
-        { key: '闪付', value: 5 },
-        { key: 'POS通C扫B', value: 6 },
-        { key: '银联二维码', value: 8 },
-        { key: '会员余额支付', value: 9 }
-      ],
-      payway: [
-        { key: '请选择', value: 0 },
-        { key: '初始化', value: 1 },
-        { key: '已支付', value: 2 },
-        { key: '出货成功', value: 3 },
-        { key: '出货失败', value: 4 },
-        { key: '订单超时', value: 5 },
-        { key: '退款初始化', value: 11 },
-        { key: '退款进行中', value: 12 },
-        { key: '退款成功', value: 13 },
-        { key: '退款失败', value: 14 },
-        { key: '订单处理中', value: 10 }
-      ],
       editForm: {
         msgId: '',
         targetId: '',
         sourceId: 1,
-        repairStat: '',
         msgBody: '',
         otpFlag: '',
-        sourceType: '',
+        pushStat: '',
+        msgType: '',
         createTime: '',
         editTime: '',
         token: localStorage.getItem('logintoken')
@@ -161,10 +132,10 @@ export default {
         msgId: '',
         targetId: '',
         sourceId: '',
-        repairStat: '',
         msgBody: '',
         otpFlag: '',
-        sourceType: '',
+        msgType: '',
+        pushStat: '',
         createTime: '',
         editTime: '',
         token: localStorage.getItem('logintoken')
@@ -174,7 +145,7 @@ export default {
         ids: '',
         token: localStorage.getItem('logintoken')
       },
-      rapairList: [
+      rapairStatList: [
         {code: '0', desc: '成功'},
         {code: '1', desc: '失败'}
       ],
@@ -184,10 +155,8 @@ export default {
       pageparm: {
         currentPage: 1,
         pageSize: 10,
-        total: 10
+        total: 0
       },
-      startTime: null,
-      endTime: null,
       startDatePicker: this.beginDate(),
       endDatePicker: this.processDate(),
     }
@@ -204,162 +173,126 @@ export default {
    * 创建完毕
    */
   created() {
-    this.getdata(this.formInline)
+    this.freshPage()
   },
 
   /**
    * 里面的方法只有被调用才会执行
    */
   methods: {
+     //第一次进入刷新页面
+    freshPage(){
+     let _this = this;
+     _this.loading = true
+     //请求后台数据
+     debugger
+     _this.pageparm.repairType = 1
+     RepairDataList(_this.pageparm)
+     .then(res => {
+       if ("0000" == res.code) {
+          this.$message({
+              type: 'success',
+              message: '刷新成功!'
+            })
+            let pageSize = res.list.length
+            if(_this.pageparm.pageSize < pageSize){
+               _this.totalList = res.list
+               _this.listData = res.list.slice(0,_this.pageparm.pageSize) 
+            }else{
+              _this.listData = res.list;
+            }
+            _this.loading = false
+            _this.pageparm.total = pageSize 
+          } else {
+            this.$message({
+              type: 'info',
+              message: res.error_msg
+            })
+          }
+     })
+      .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '初次刷新失败'
+          })
+        })
+    },
     // 获取公司列表
-    getdata(parameter) {
-      this.loading = true
-      // 模拟数据开始
-      let res = {
-        code: 0,
-        msg: null,
-        count: 23,
-        data: [
-          {
-            msgId: 1232131231211,
-            targetId: '213213',
-            sourceId: 1,
-            repairStat: '成功',
-            msgBody: 'cdsf:dwede,dewdew:12321',
-            otpFlag: '新增',
-            sourceType: '风控',
-            createTime: 1526380176000,
-            editTime: 1526380176000,
-          },
-          {
-           msgId: '1232131231211',
-            targetId: '213213',
-            sourceId: 1,
-            repairStat: '成功',
-            msgBody: 'cdsf:dwede,dewdew:12321',
-            otpFlag: '新增',
-            sourceType: '风控',
-            createTime: 1526380176000,
-            editTime: 1526380176000,
-          },
-          {
-            msgId: '1232131231211',
-            targetId: '213213',
-            sourceId: 1,
-            repairStat: '成功',
-            msgBody: 'cdsf:dwede,dewdew:12321',
-            otpFlag: '新增',
-            sourceType: '风控',
-            createTime: 1526380176000,
-            editTime: 1526380176000,
-          },
-          {
-           msgId: '1232131231211',
-            targetId: '213213',
-            sourceId: 1,
-            repairStat: '成功',
-            msgBody: 'cdsf:dwede,dewdew:12321',
-            otpFlag: '新增',
-            sourceType: '风控',
-            createTime: 1526380176000,
-            editTime: 1526380176000,
-          }         
-        ]
-      }
+    getdata(formInline) {
+      debugger
+      let _this = this
+      _this.loading = true
+      formInline.pageparm = this.pageparm;
+      formInline.repairType = 1;
       this.loading = false
-      this.listData = res.data
-      this.pageparm.currentPage = this.formInline.page
-      this.pageparm.pageSize = this.formInline.limit
-      this.pageparm.total = res.count
-      // 模拟数据结束
-
-      /***
-       * 调用接口，注释上面模拟数据 取消下面注释
-       */
-
-      // OrderList(parameter)
-      //   .then(res => {
-      //     this.loading = false
-      //     if (res.success == false) {
-      //       this.$message({
-      //         type: 'info',
-      //         message: res.msg
-      //       })
-      //     } else {
-      //       this.listData = res.data
-      //       // 分页赋值
-      //       this.pageparm.currentPage = this.formInline.page
-      //       this.pageparm.pageSize = this.formInline.limit
-      //       this.pageparm.total = res.count
-      //     }
-      //   })
-      //   .catch(err => {
-      //     this.loading = false
-      //     this.$message.error('菜单加载失败，请稍后再试！')
-      //   })
+      RepairDataList(formInline)
+     .then(res => {
+       if ("0000" == res.code) {
+          this.$message({
+              type: 'success',
+              message: '查询成功!'
+            })
+            let pageSize = res.list.length
+            if(_this.pageparm.pageSize < pageSize){
+               _this.totalList = res.list
+               _this.listData = res.list.slice(0,_this.pageparm.pageSize) 
+            }else{
+              _this.listData = res.list;
+            }
+            _this.loading = false
+            _this.pageparm.total = pageSize 
+          } else {
+            this.$message({
+              type: 'info',
+              message: res.error_msg
+            })
+          }
+     })
+      .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '查询失败!'
+          })
+        })
     },
     // 分页插件事件
     callFather(parm) {
-      this.formInline.page = parm.currentPage
-      this.formInline.limit = parm.pageSize
-      this.getdata(this.formInline)
+      // let currentPage = parm.currentPage % 1000 == 0 ? parm.currentPage : parm.currentPage % 1000;
+      this.listData = this.totalList.slice((parm.currentPage-1) * 10,parm.currentPage * 10);
+      //当翻页到最后一页，再次调用
+      debugger
+      if(parm.currentPage * 10 == this.pageparm.total){
+        this.pageparm.currentPage = parm.currentPage + 1;
+        this.freshPage();
+      }
     },
     // 搜索事件
     search() {
       this.getdata(this.formInline)
     },
-    //显示编辑界面
+    //显示预览界面
     handleEdit: function(index, row) {
       this.editFormVisible = true
       this.editForm = row
     },
-    // 编辑、增加页面保存方法
-    submitForm(editData) {
-      this.$refs[editData].validate(valid => {
-        if (valid) {
-          ConfigSave(this.editForm)
-            .then(res => {
-              this.editFormVisible = false
-              this.loading = false
-              if (res.success) {
-                this.getdata(this.formInline)
-                this.$message({
-                  type: 'success',
-                  message: '公司保存成功！'
-                })
-              } else {
-                this.$message({
-                  type: 'info',
-                  message: res.msg
-                })
-              }
-            })
-            .catch(err => {
-              this.editFormVisible = false
-              this.loading = false
-              this.$message.error('支付配置信息保存失败，请稍后再试！')
-            })
-        } else {
-          return false
-        }
-      })
-    },
-    // 删除公司
-    deleteUser(index, row) {
-      this.$confirm('确定要删除吗?', '信息', {
+    // 重新推送
+    pushData(index, row) {
+      debugger
+      row.repairType = 1
+      this.$confirm('确定要推送吗?', '信息', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          ConfigDelete(row.deptId)
+          RepairDataList(row)
             .then(res => {
-              if (res.success) {
+              if ("0000" == res.code) {
                 this.$message({
                   type: 'success',
-                  message: '公司已删除!'
+                  message: '推送成功!'
                 })
-                this.getdata(this.formInline)
+                row.pushStat = 2
               } else {
                 this.$message({
                   type: 'info',
@@ -369,13 +302,13 @@ export default {
             })
             .catch(err => {
               this.loading = false
-              this.$message.error('支付配置信息删除失败，请稍后再试！')
+              this.$message.error('推送失败，请稍后再试！')
             })
         })
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消推送'
           })
         })
     },
@@ -388,8 +321,8 @@ export default {
       const self = this
       return {
         disabledDate(time){
-          if (self.form.endTime) {  //如果结束时间不为空，则小于结束时间
-            return new Date(self.form.endTime).getTime() < time.getTime()
+          if (self.formInline.editTime) {  //如果结束时间不为空，则小于结束时间
+            return new Date(self.formInline.editTime).getTime() < time.getTime()
           } else {
             // return time.getTime() > Date.now()//开始时间不选时，结束时间最大值小于等于当天
           }
@@ -400,8 +333,8 @@ export default {
       const  self = this
       return {
         disabledDate(time) {
-          if (self.form.startTime) {  //如果开始时间不为空，则结束时间大于开始时间
-            return new Date(self.form.startTime).getTime() > time.getTime()
+          if (self.formInline.startTime) {  //如果开始时间不为空，则结束时间大于开始时间
+            return new Date(self.formInline.startTime).getTime() > time.getTime()
           } else {
             // return time.getTime() > Date.now()//开始时间不选时，结束时间最大值小于等于当天
           }
